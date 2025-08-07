@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- TikTok AutoFollow – Gọi API liên tục, nghỉ ngắn
+-- TikTok AutoFollow – By_Mr_L
 ----------------------------------------------------------------
 local jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJ2dWFnYTJrMSIsImxldmVsIjoxLCJmdWxsX25hbWUiOiJOZ3V5ZW5EdXlMYW0iLCJ1c2VyX2lkIjo5MCwibGFzdF90aW1lX3B3IjowLCJpYXQiOjE3NTI1NjI4OTZ9.VUD0P6-3sajjoazq3gIDB3pzO6__7r9GPhsucr8qweA"
 local deviceID = "227ce1968e1b431a"
@@ -46,8 +46,13 @@ end
 ----------------------------------------------------------------
 local function extractUsernames(json)
     local usernames = {}
-    for link in json:gmatch('"https://www%.tiktok%.com/@([^"/]+)"') do
-        table.insert(usernames, link)
+    for block in json:gmatch('"linkAcc"%s*:%s*%[(.-)%]') do
+        for link in block:gmatch('"(.-)"') do
+            local username = link:match("tiktok%.com/@([^/?]+)")
+            if username then
+                table.insert(usernames, username)
+            end
+        end
     end
     return usernames
 end
@@ -103,4 +108,4 @@ while true do
     usleep(5000000)                      -- 🕐 Lặp lại sau 5 giây
 end
 
-toast("🎉 Xong xuôi – Script by Mr.LL")
+toast("🎉 Xong xuôi – Script by Mr.L")
